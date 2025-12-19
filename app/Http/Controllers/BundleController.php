@@ -9,8 +9,10 @@ class BundleController extends Controller
 {
     public function index()
     {
-        // Fetch bundles with their associated products (pivot)
-        $bundles = Bundle::with('products')->get();
+        // Change .get() to .paginate()
+        // 10 is the number of items per page
+        $bundles = Bundle::with('products')->paginate(10); 
+        
         return view('bundles.index', compact('bundles'));
     }
 

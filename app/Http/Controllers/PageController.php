@@ -21,16 +21,8 @@ class PageController extends Controller
         return view('pages.farm');
     }
 
-    public function contact(Request $request)
+    public function contact()
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email',
-            'subject' => 'nullable|string',
-            'message' => 'required|string',
-        ]);
-
-        Contact::create($validated);
-        return back()->with('success', 'Thank you for reaching out!');
+        return view('contact.index'); // Ensure you have a contact.blade.php file
     }
 }

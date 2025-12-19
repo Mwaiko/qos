@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\BundleController as AdminBundleController;
+use App\Http\Controllers\Admin\ContactController;
 
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
@@ -27,8 +28,11 @@ Route::get('/learn/{slug}', [PostController::class, 'show']);
 Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
 Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+// Add this line to SHOW the form
+Route::get('/contact', [PageController::class, 'contact'])->name('contact.index');
 
-Route::post('/contact', [PageController::class, 'contact']);
+// Your existing route to PROCESS the form
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // This is your main "Control Center"
     Route::get('/dashboard', [AdminPostController::class, 'dashboard'])->name('admin.dashboard');
