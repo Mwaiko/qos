@@ -38,5 +38,10 @@ EXPOSE 10000
 #  && 
 # Start Laravel
 # Updated CMD in Dockerfile
-CMD php artisan storage:link \
+
+CMD php artisan config:clear \
+ && php artisan config:cache \
+ && php artisan route:clear \
+ && php artisan view:clear \
+ && php artisan storage:link \
  && php artisan serve --host=0.0.0.0 --port=10000

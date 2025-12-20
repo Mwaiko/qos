@@ -28,7 +28,7 @@
             <!-- Product Images -->
             <div>
                 <div class="rounded-lg overflow-hidden shadow-2xl mb-4">
-                    <img src="{{ $product->image ?? '/images/default-vegetable.jpg' }}" alt="{{ $product->name }}" class="w-full h-96 object-cover" id="mainImage">
+                    <img src="{{ asset('storage/' . $product->featured_image) }}"  alt="{{ $product->name }}" class="w-full h-96 object-cover" id="mainImage">
                 </div>
                 
                 <!-- Thumbnail Gallery -->
