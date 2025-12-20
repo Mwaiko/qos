@@ -1,13 +1,14 @@
 <?php
 
 use App\Http\Controllers\BundleController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\BundleController as AdminBundleController;
-use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\ContactController as AdminContactController; 
 
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
@@ -31,7 +32,6 @@ Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logou
 // Add this line to SHOW the form
 Route::get('/contact', [PageController::class, 'contact'])->name('contact.index');
 
-// Your existing route to PROCESS the form
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // This is your main "Control Center"
@@ -42,6 +42,5 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::resource('bundles', AdminBundleController::class);
     Route::resource('posts', AdminPostController::class);
     
-    // View people who contacted you
-    Route::get('messages', [AdminPostController::class, 'messages'])->name('admin.messages');
+    Route::get('messages', [AdminContactController::class, 'messages'])->name('admin.messages');
 });

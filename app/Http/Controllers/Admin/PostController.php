@@ -4,62 +4,92 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Post;
+use App\Models\Contact;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $posts = Post::latest()->paginate(10);
+        return view('admin.posts.index', compact('posts'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('admin.posts.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|max:255',
+            'content' => 'required',
+            'category' => 'nullable|string',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $post = new Post();
+        $post->title = $request->title;
+        $post->slug = Str::slug($request->title);
+        $post->content = $request->content;
+        $post->category = $request->category;
+
+        if ($request->hasFile('featured_image')) {
+            $imageName = time().'.'.$request->featured_image->extension();
+            $request->featured_image->move(public_path('images/posts'), $imageName);
+            $post->featured_image = 'images/posts/' . $imageName;
+        }
+
+        $post->published_at = now();
+        $post->save();
+
+        return redirect()->route('posts.index')->with('success', 'Post created successfully!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Post $post)
     {
-        //
+        return view('admin.posts.edit', compact('post'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, Post $post)
     {
-        //
+        $request->validate([
+            'title' => 'required|max:255',
+            'content' => 'required',
+            'category' => 'nullable|string',
+        ]);
+
+        $post->title = $request->title;
+        $post->slug = Str::slug($request->title);
+        $post->content = $request->content;
+        $post->category = $request->category;
+
+        if ($request->hasFile('featured_image')) {
+            $imageName = time().'.'.$request->featured_image->extension();
+            $request->featured_image->move(public_path('images/posts'), $imageName);
+            $post->featured_image = 'images/posts/' . $imageName;
+        }
+
+        $post->save();
+
+        return redirect()->route('posts.index')->with('success', 'Post updated successfully!');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return redirect()->route('posts.index')->with('success', 'Post deleted successfully!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function dashboard()
     {
-        //
+        $totalProducts = \App\Models\Product::count();
+        $totalBundles = \App\Models\Bundle::count();
+        $totalPosts = Post::count();
+        $latestMessages = Contact::latest()->take(3)->get();
+        
+        return view('admin.dashboard', compact('totalProducts', 'totalBundles', 'totalPosts', 'latestMessages'));
     }
 }

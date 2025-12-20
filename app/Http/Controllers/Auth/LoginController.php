@@ -26,7 +26,7 @@ class LoginController extends Controller
             $request->session()->regenerate();
 
             // Redirect to your admin products page
-            return redirect()->intended('admin/products');
+            return redirect()->intended('admin/dashboard');
         }
 
         return back()->withErrors([

@@ -3,7 +3,7 @@
 @section('title', 'Our Organic Produce - Quality Outsource Solutions')
 
 @section('content')
-
+</table>
 <!-- Hero Section -->
 <section class="relative bg-gradient-to-br from-cream to-sage-green/20 py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -89,7 +89,7 @@
             @foreach($products as $product)
             <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 group">
                 <div class="relative h-64 bg-sage-green/10 overflow-hidden">
-                    <img src="{{ $product->image ?? '/images/default-vegetable.jpg' }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                    <img src="{{ asset('storage/' . $product->featured_image) }}"  alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
                     
                     @if($product->is_featured)
                     <div class="absolute top-4 left-4">

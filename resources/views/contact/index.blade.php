@@ -46,6 +46,26 @@
 
         <!-- Contact Form -->
         <div class="bg-white rounded-lg shadow-2xl p-8 md:p-12">
+            @if(session('success'))
+                <div class="mb-8 p-4 bg-earth-brown/10 border-l-4 border-earth-brown text-sage-green rounded-r-md shadow-sm">
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-earth-brown mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                         <p class="font-semibold">{{ session('success') }}</p>
+                    </div>
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="mb-8 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-md shadow-sm">
+                    <ul class="list-disc list-inside text-sm">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <form action="{{ route('contact.store') }}" method="POST">
                 @csrf
                 
