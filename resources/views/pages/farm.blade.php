@@ -23,22 +23,23 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
             <div class="rounded-lg overflow-hidden shadow-xl">
-                <img src="/images/farm-wide.jpg" alt="Munyaka Farm Overview" class="w-full h-96 object-cover">
+                <img src="{{ asset('Images/farm-wide.png') }}" alt="Munyaka Farm Overview" class="w-full h-96 object-cover">
             </div>
             <div class="rounded-lg overflow-hidden shadow-xl">
-                <img src="/images/farm-rows.jpg" alt="Farm Rows" class="w-full h-96 object-cover">
+                <img src="{{ asset('Images/farm-row.png') }}" alt="Farm Rows" class="w-full h-96 object-cover">
             </div>
         </div>
         
+        
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="rounded-lg overflow-hidden shadow-lg">
-                <img src="/images/farm-harvest.jpg" alt="Harvest Time" class="w-full h-64 object-cover">
+                <img src="{{ asset('Images/farm-produce.png') }}" alt="Harvest Time" class="w-full h-64 object-cover">
             </div>
             <div class="rounded-lg overflow-hidden shadow-lg">
-                <img src="/images/farm-soil.jpg" alt="Rich Soil" class="w-full h-64 object-cover">
+                <img src="{{ asset('Images/farm-soil.png') }}" alt="Rich Soil" class="w-full h-64 object-cover">
             </div>
             <div class="rounded-lg overflow-hidden shadow-lg">
-                <img src="/images/farm-vegetables.jpg" alt="Fresh Vegetables" class="w-full h-64 object-cover">
+                <img src="{{ asset('Images/fresh-vegetables.png') }}" alt="Fresh Vegetables" class="w-full h-64 object-cover">
             </div>
         </div>
     </div>

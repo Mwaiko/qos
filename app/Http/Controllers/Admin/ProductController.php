@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+
 class ProductController extends Controller
 {
     public function index()
@@ -19,33 +21,38 @@ class ProductController extends Controller
         return view('admin.products.create');
     }
 
-    public function store(Request $request) {
+    public function store(Request $request) 
+    {
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
             'unit' => 'required|string',
             'description' => 'required',
             'health_benefits' => 'nullable|string',
-            'featured_image' => 'nullable|image|max:2048' // Matching your requirement
+            'featured_image' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:10240' // 10MB
         ]);
 
-        // 1. Generate the URL-friendly slug
         $data['slug'] = Str::slug($request->name);
 
-        // 2. Explicitly handle the checkboxes (Force 0 or 1)
+        // Explicitly handle the checkboxes
         $data['is_organic'] = $request->has('is_organic') ? 1 : 0;
         $data['status'] = $request->has('status') ? 1 : 0;
 
-        // 3. Handle the Image Upload
+        // Handle the Image Upload
         if($request->hasFile('featured_image')) {
             $data['featured_image'] = $request->file('featured_image')->store('products', 'public');
         }
 
-    // 4. Save to Database
-    Product::create($data);
+        // Save to Database
+        Product::create($data);
 
-    return redirect()->route('products.index')->with('status', 'Product Created Successfully!');
-}
+        return redirect()->route('products.index')->with('success', 'Product created successfully!');
+    }
+
+    public function show(Product $product)
+    {
+        return view('admin.products.show', compact('product'));
+    }
 
     public function edit(Product $product)
     {
@@ -54,13 +61,48 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
-        $product->update($request->all());
-        return redirect()->route('products.index');
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'unit' => 'required|string',
+            'description' => 'required',
+            'health_benefits' => 'nullable|string',
+            'featured_image' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:10240' // 10MB
+        ]);
+
+        // Update slug if name changed
+        if ($request->name !== $product->name) {
+            $data['slug'] = Str::slug($request->name);
+        }
+
+        // Explicitly handle the checkboxes
+        $data['is_organic'] = $request->has('is_organic') ? 1 : 0;
+        $data['status'] = $request->has('status') ? 1 : 0;
+
+        // Handle the Image Upload
+        if($request->hasFile('featured_image')) {
+            // Delete old image if exists
+            if($product->featured_image) {
+                Storage::disk('public')->delete($product->featured_image);
+            }
+            $data['featured_image'] = $request->file('featured_image')->store('products', 'public');
+        }
+
+        // Update the product
+        $product->update($data);
+
+        return redirect()->route('products.index')->with('success', 'Product updated successfully!');
     }
 
     public function destroy(Product $product)
     {
+        // Delete image if exists
+        if($product->featured_image) {
+            Storage::disk('public')->delete($product->featured_image);
+        }
+        
         $product->delete();
-        return redirect()->route('products.index');
+        
+        return redirect()->route('products.index')->with('success', 'Product deleted successfully!');
     }
 }
