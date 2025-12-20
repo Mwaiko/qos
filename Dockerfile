@@ -22,8 +22,7 @@ COPY . .
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
-
+RUN composer install --no-dev --optimize-autoloader && php artisan migrate --force 
 # Install Node dependencies & build Tailwind
 RUN npm install
 RUN npm run build
