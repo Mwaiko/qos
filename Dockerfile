@@ -33,8 +33,10 @@ RUN chown -R www-data:www-data storage bootstrap/cache
 # Expose port
 EXPOSE 10000
 
+# php artisan migrate --force \
+#  && php artisan db:seed --class=AdminUserSeeder --force \
+#  && 
 # Start Laravel
-CMD php artisan db:seed --class=AdminUserSeeder --force \
- && php artisan storage:link \
- && php artisan serve --host=0.0.0.0 --port=10000  
-
+# Updated CMD in Dockerfile
+CMD php artisan storage:link \
+ && php artisan serve --host=0.0.0.0 --port=10000
