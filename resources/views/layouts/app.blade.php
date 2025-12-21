@@ -30,8 +30,16 @@
     </style>
 </head>
 <body class="font-sans text-deep-soil bg-white">
-    @include('components.navbar')
     
+    @auth
+    @if(auth()->user()->is_admin)
+        @include('admin.layouts.navbar')
+    @else
+        @include('components.navbar')
+        @endif
+    @else
+        @include('components.navbar')
+    @endauth
     <main>
         @yield('content')
     </main>
