@@ -211,7 +211,7 @@
                 </a>
             </div>
             <div>
-                <img src="/images/learning-content.jpg" alt="Educational Content" class="rounded-lg shadow-xl">
+                <img src="{{ asset('Images/Educational-content.png')  }}" alt="Educational Content" class="rounded-lg">
             </div>
         </div>
     </div>

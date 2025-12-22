@@ -24,7 +24,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
             <div>
-                <img src="/images/farm-heritage.jpg" alt="Our Heritage" class="rounded-lg shadow-xl">
+                <img src="{{ asset('Images/Heritage.png')  }}" alt="Our Heritage" class="rounded-lg shadow-xl">
             </div>
             <div>
                 <h2 class="text-3xl md:text-4xl font-serif font-bold text-deep-soil mb-6">
@@ -152,7 +152,7 @@
         
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-12">
             <div>
-                <img src="/images/munyaka-farm.jpg" alt="Munyaka Farm" class="rounded-lg shadow-xl">
+                <img src="{{ asset('Images/Munyaka-farm.png')  }}" alt="Munyaka Farm" class="rounded-lg shadow-xl">
             </div>
             <div>
                 <div class="space-y-4 text-sage-green leading-relaxed">
