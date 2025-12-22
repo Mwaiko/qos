@@ -142,7 +142,7 @@
                         <a href="/produce/{{ $product->slug }}" class="flex-1 inline-flex items-center justify-center px-4 py-2 bg-earth-brown text-white rounded-md hover:bg-deep-soil transition-colors duration-200 font-semibold text-sm">
                             View Details
                         </a>
-                        <button class="px-4 py-2 bg-sage-green/10 text-earth-brown rounded-md hover:bg-sage-green/20 transition-colors duration-200 font-semibold text-sm">
+                        <button onclick="addToCart({{ $product->id }})" class="px-4 py-2 bg-sage-green/10 text-earth-brown rounded-md hover:bg-sage-green/20 transition-colors duration-200 font-semibold text-sm">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
                             </svg>
@@ -217,5 +217,44 @@
         </a>
     </div>
 </section>
+<script>
 
+function addToCart(productId, quantity = 1) {
+    fetch('{{ route("cart.add") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+            product_id: productId,
+            quantity: quantity
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Show success message
+            alert(data.message);
+            // Update cart count in header if you have one
+            updateCartCount();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to add product to cart');
+    });
+}
+
+function updateCartCount() {
+    fetch('{{ route("cart.count") }}')
+    .then(response => response.json())
+    .then(data => {
+        const cartBadge = document.querySelector('.cart-count');
+        if (cartBadge) {
+            cartBadge.textContent = data.count;
+        }
+    });
+}
+</script>
 @endsection

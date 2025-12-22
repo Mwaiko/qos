@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\BundleController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductController;
+
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\BundleController as AdminBundleController;
@@ -13,7 +15,7 @@ use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
 
-Route::get('/', [PageController::class, 'home']);
+Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/about', [PageController::class, 'about']);
 Route::get('/farm', [PageController::class, 'farm']);
 
@@ -33,6 +35,17 @@ Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logou
 Route::get('/contact', [PageController::class, 'contact'])->name('contact.index');
 
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+// Cart Routes
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+Route::get('/cart/count', [CartController::class, 'getCount'])->name('cart.count');
+
+// Checkout Routes
+Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
+Route::post('/checkout/process', [CartController::class, 'processOrder'])->name('checkout.process');
+Route::get('/order/success', [CartController::class, 'orderSuccess'])->name('order.success');
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // This is your main "Control Center"
     Route::get('/dashboard', [AdminPostController::class, 'dashboard'])->name('admin.dashboard');

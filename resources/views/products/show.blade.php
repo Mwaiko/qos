@@ -140,7 +140,7 @@
                 
                 <!-- Action Buttons -->
                 <div class="flex flex-col sm:flex-row gap-4 mb-8">
-                    <button class="flex-1 px-8 py-4 bg-earth-brown text-white rounded-md hover:bg-deep-soil transition-colors duration-200 font-semibold text-lg flex items-center justify-center gap-2">
+                    <button onclick="addToCart({{ $product->id }}, document.getElementById('quantity').value)" class="flex-1 px-8 py-4 bg-earth-brown text-white rounded-md hover:bg-deep-soil transition-colors duration-200 font-semibold text-lg flex items-center justify-center gap-2">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
                         </svg>
@@ -161,7 +161,7 @@
                                 <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>
                                 <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z"/>
                             </svg>
-                            <span class="text-sage-green">Free delivery on orders over KSh 2,000</span>
+                            <span class="text-sage-green">Delivery Available</span>
                         </div>
                         <div class="flex items-center gap-3">
                             <svg class="w-5 h-5 text-earth-brown" fill="currentColor" viewBox="0 0 20 20">
@@ -311,6 +311,48 @@ function showTab(tabName) {
     event.target.classList.remove('text-sage-green');
     event.target.classList.add('text-earth-brown', 'border-b-2', 'border-earth-brown');
 }
+
+// Add CSRF token to meta tag in your layout if not already present
+// <meta name="csrf-token" content="{{ csrf_token() }}">
+
+function addToCart(productId, quantity = 1) {
+    fetch('{{ route("cart.add") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+            product_id: productId,
+            quantity: quantity
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Show success message
+            alert(data.message);
+            // Update cart count in header if you have one
+            updateCartCount();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to add product to cart');
+    });
+}
+
+function updateCartCount() {
+    fetch('{{ route("cart.count") }}')
+    .then(response => response.json())
+    .then(data => {
+        const cartBadge = document.querySelector('.cart-count');
+        if (cartBadge) {
+            cartBadge.textContent = data.count;
+        }
+    });
+}
+
 </script>
 
 @endsection
